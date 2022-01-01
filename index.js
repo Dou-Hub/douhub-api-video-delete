@@ -26,7 +26,7 @@ const s3 = new AWS.S3();
 export const processVideo = async (event, context, callback) => {
 
     if (_.callFromAWSEvents(event)) return;
-    if (_.track) console.log(JSON.stringify(event));
+    if (_track) console.log(JSON.stringify(event));
 
     const result = await _.processSNSRecords(event.Records, async (record) => {
         try {
@@ -39,7 +39,7 @@ export const processVideo = async (event, context, callback) => {
         }
     });
 
-    if (_.track) console.log({ result });
+    if (_track) console.log({ result });
 }
 
 const processInternal = async (record) => {
@@ -51,7 +51,7 @@ const processInternal = async (record) => {
     const fileFolder = fileFullNameInfo.length == 0 ? '' : fileFullNameInfo.join('/');
 
     if (!_.isNonEmptyString(fileFolder)) throw new Error('The file has to be in a folder.');
-    if (_.track) console.log({ fileFullName, fileFolder, fileName, fileNameBase });
+    if (_track) console.log({ fileFullName, fileFolder, fileName, fileNameBase });
 
     const bucket = `${record.s3.bucket.name}-m3u8`;
 
@@ -74,7 +74,7 @@ const processInternal = async (record) => {
         });
     })();
 
-    if (_.track) console.log({files: JSON.stringify(files)});
+    if (_track) console.log({files: JSON.stringify(files)});
 
     for (var i = 0; i < files.length; i++) {
         const file = files[i];
